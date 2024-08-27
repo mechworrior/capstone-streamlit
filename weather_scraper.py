@@ -50,5 +50,5 @@ def get_weather(
         'precipitation', 'sunshine_duration', 'windspeed_ave',
         'humidity_ave', 'temp_max(C)', 'temp_min(C)', 'snow'
         ]
-    print(df_total.info())
+    
     return df_total

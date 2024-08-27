@@ -100,7 +100,7 @@ class Weather:
     def categorize(self):
         groups = self.weather_data.groupby(pd.Grouper(freq='Y'))
         if '最高気温(℃)' in self.weather_data.columns:
-            print('here')
+            # print('here')
             temp_max = '最高気温(℃)'
             temp_min = '最低気温(℃)'
         else:
@@ -116,6 +116,7 @@ class Weather:
 
     def visualize(self):
         date_index = self.weather_data.index
+
         mask = (date_index.month == 2) & (date_index.day == 29)
         data = self.weather_data[~mask]
         last_year = data.index.year.unique().max()
@@ -123,6 +124,10 @@ class Weather:
         data_past = data[['temp_max(C)', 'temp_min(C)']][data.index.year != last_year]
         data_last = data[data.index.year == last_year].reset_index()
         data_past['dayofyear'] = data_past.index.dayofyear
+        
+        leap_year_mask = data_past.index.is_leap_year & (data_past.index.month >=3)
+
+        data_past['dayofyear'][leap_year_mask] = (data_past['dayofyear'][leap_year_mask]-1).copy()     
 
         group = data_past.groupby('dayofyear')
 
@@ -132,6 +137,7 @@ class Weather:
         bands = pd.merge(max_temp['temp_max(C)'], min_temp['temp_min(C)'], left_index=True, right_index=True).reset_index().drop('dayofyear', axis=1)
         temp_upper = bands['temp_max(C)'].values
         temp_lower = bands['temp_min(C)'].values
+
 
         upper_mask = bands['temp_max(C)'].values < data_last['temp_max(C)'].values
         lower_mask = bands['temp_min(C)'].values > data_last['temp_min(C)'].values
