@@ -127,7 +127,7 @@ class Weather:
         
         leap_year_mask = data_past.index.is_leap_year & (data_past.index.month >=3)
 
-        data_past['dayofyear'][leap_year_mask] = (data_past['dayofyear'][leap_year_mask]-1).copy()     
+        data_past['dayofyear'][leap_year_mask] = data_past['dayofyear'][leap_year_mask]-1
 
         group = data_past.groupby('dayofyear')
 
