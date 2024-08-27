@@ -26,7 +26,7 @@ years = list(range(1976,2024))
 start_year, end_year = st.select_slider(
     '取得したい年間を選択してください。',
     options=years,
-    value=[2003,2005],
+    value=[2010,2023],
     )
 get_data_confirm = st.button(f'{start_year} から {end_year}までのデータを取得')
 if start_year and end_year and get_data_confirm:
