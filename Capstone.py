@@ -19,6 +19,7 @@ if uploaded_file is not None:
     weather_inst = Weather(uploaded_file)
     st.write(weather_inst.weather_data.head(3))
     st.session_state['weather_data'] = weather_inst
+    st.session_state['years'] = list(weather_inst.weather_data.index.year.unique())
 
 st.write('''または取得したいデータを指定してください。''')
 
