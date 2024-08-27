@@ -33,7 +33,7 @@ if start_year and end_year and get_data_confirm:
     if start_year == end_year:
         years = [start_year]
     else:
-        years = [start_year,end_year]
+        years = list(range(start_year,end_year+1))
     with st.spinner(f'{start_year} から {end_year}までのデータを取得しています。'):
         weather_inst = Weather(get_weather(years=years))
     st.write(weather_inst.weather_data.head(3))
