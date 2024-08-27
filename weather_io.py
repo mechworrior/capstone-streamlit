@@ -1,6 +1,5 @@
 import pandas as pd
 import re 
-# from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -114,15 +113,6 @@ class Weather:
         summary.columns = summary.columns.droplevel()
         
         return summary
-    
-    # def seasonal(self):
-    #     decompose_result = seasonal_decompose(
-    #         self.weather_data['最高気温(℃)'],
-    #         model='adaptive',
-    #         period=365,
-    #     )
-    #     plot_decompose_result(decompose_result)
-    
 
     def visualize(self):
         date_index = self.weather_data.index
