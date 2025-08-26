@@ -58,7 +58,7 @@ def plot_decompose_result(decompose_result):
     axes[3].set_title("Residual")
     axes[3].plot(decompose_result.resid)
 
-    plt.show()
+    return fig
 
 
 def nettaiya(x):
@@ -154,6 +154,30 @@ class Weather:
 
         return summary
 
+    def plot_decompose_result(self, column="temp_max(C)", model="additive"):
+        """
+        時系列分解の結果をプロットする関数。
+
+        Args:
+            column (str, optional): 分解する列名。デフォルトは "temp_max(C)"。
+            model (str, optional): 分解モデル。'additive' または 'multiplicative'。デフォルトは 'additive'。
+
+        Returns:
+            matplotlib.figure.Figure: 分解結果のプロットを含むFigureオブジェクト。
+        """
+        from statsmodels.tsa.seasonal import seasonal_decompose
+
+        # 欠損値を線形補完で埋める
+        data = self.weather_data[column].interpolate(method="linear")
+
+        # 時系列分解を実行
+        decompose_result = seasonal_decompose(data, model=model, period=365)
+
+        # 分解結果をプロット
+        fig = plot_decompose_result(decompose_result)
+
+        return fig
+
     def visualize(self):
         """
         過去の気温データと最新年の気温データを比較するグラフを生成する関数。
@@ -197,9 +221,16 @@ class Weather:
         temp_upper = bands["temp_max(C)"].values
         temp_lower = bands["temp_min(C)"].values
 
+        # 最新年のデータの日番号を計算
+        bands_aligned = bands.loc[data_last.index]
+
         # 最新年の最高気温と最低気温が過去の範囲外の日を特定
-        upper_mask = bands["temp_max(C)"].values < data_last["temp_max(C)"].values
-        lower_mask = bands["temp_min(C)"].values > data_last["temp_min(C)"].values
+        upper_mask = (
+            bands_aligned["temp_max(C)"].values < data_last["temp_max(C)"].values
+        )
+        lower_mask = (
+            bands_aligned["temp_min(C)"].values > data_last["temp_min(C)"].values
+        )
 
         # グラフを生成
         fig, ax = plt.subplots()
@@ -217,7 +248,6 @@ class Weather:
         ax.set_ylabel("気温 [℃]")
         # x軸を自動調整
         ax.autoscale(enable=True, axis="x", tight=True)
-        plt.show()
 
         return fig
 
